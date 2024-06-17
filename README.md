@@ -4,9 +4,9 @@ This repository contains a script to automate downloading videos and images from
 
 ## Description
 
-The script loops through every `<article>` element on a Pexels webpage, starting from the 27th article (index 26). It checks if there is a download button and, if so, emulates a click to download the video or image. If the download is successful, it logs the ID of the downloaded media and the index of the article. The script waits for 5 seconds before continuing with the next article. If an error occurs, the script stops execution and logs the error.
+The script loops through every `<article>` element on a Pexels webpage and downloades the image/video. It checks if there is a download button and, if so, emulates a click to download the video or image. If the download is successful, it logs the ID of the downloaded media and the index of the article. The script waits for 10 seconds before continuing with the next article. If an error occurs, the script stops execution and logs the error.
 
-The script has been tested on collections, but it should also work for user profiles and search results.
+The script has been tested on Pexels collections, but it should also work for user profiles and search results.
 
 ## Usage
 
@@ -18,6 +18,7 @@ The script has been tested on collections, but it should also work for user prof
 4. Go to the `Console` tab.
 5. Copy the content of `download_script.js` and paste it into the console.
 6. Press `Enter` to run the script.
+7. Leave it running in the background
 
 ## Files
 
