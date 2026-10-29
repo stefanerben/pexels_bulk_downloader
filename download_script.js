@@ -1,33 +1,47 @@
-(async function() {
-  // Helper function to wait for a given number of milliseconds
-  function wait(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
+(async function () {
+  const START_INDEX = 0;     // Resume from this index if interrupted
+  const DELAY_MS = 10000;    // 10 seconds between downloads
 
-  // Function to process each article
-  async function processArticles() {
-    const articles = document.querySelectorAll('article');
-    
-    for (let i = 0; i < articles.length; i++) { // change 0 in case you need to restart the script and need to define a new index. See index in console log
-      const article = articles[i];
-      const downloadButton = article.querySelector('a[download][title="Download"]');
+  const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-      if (downloadButton) {
-        try {
-          // Emulate button click
-          downloadButton.click();
-          console.log(`Clicked download button for video ID: ${downloadButton.href.split('/').pop()} at article index: ${i}`);
-          
-          // Wait for 10 seconds
-          await wait(10000);
-        } catch (error) {
-          console.error('An error occurred:', error);
-          break;
-        }
+  const articles = document.querySelectorAll('article');
+  console.log(`Found articles: ${articles.length}`);
+
+  window.pexelsStopDownloads = false;
+
+  for (let i = START_INDEX; i < articles.length; i++) {
+    if (window.pexelsStopDownloads) {
+      console.log(`Stopped at index ${i}`);
+      break;
+    }
+
+    const downloadButton = articles[i].querySelector(
+      'a[download][href*="/download/video/"]'
+    );
+
+    if (!downloadButton) {
+      console.warn(`No download button at index ${i}`);
+      continue;
+    }
+
+    try {
+      const videoId = downloadButton.href.match(/video\/(\d+)/)?.[1];
+
+      downloadButton.click();
+
+      console.log(
+        `[${i + 1}/${articles.length}] Download triggered: Video ${videoId} (index ${i})`
+      );
+
+      if (i < articles.length - 1) {
+        await wait(DELAY_MS);
       }
+
+    } catch (error) {
+      console.error(`Error at index ${i}:`, error);
+      break;
     }
   }
 
-  // Start processing the articles
-  processArticles();
+  console.log('Download process finished.');
 })();
